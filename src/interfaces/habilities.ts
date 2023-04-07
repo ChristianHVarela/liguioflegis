@@ -1,5 +1,5 @@
 
-type Habilities = {
+interface Habilities {
     id: number;
     name: string;
     description: string;

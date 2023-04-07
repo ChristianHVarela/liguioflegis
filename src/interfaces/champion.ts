@@ -1,6 +1,6 @@
 import { Habilities } from "./habilities";
 
-type Champion = {
+interface Champion {
     id: number;
     name: string;
     age: string;

@@ -6,8 +6,16 @@ async function getChampions(name: string, localization: string, className: strin
         json_agg(json_build_object('name', h.name, 'description', h.description)) AS habilities FROM champions c JOIN habilities h 
         ON h.champion_id = c.id WHERE UPPER(c.name) LIKE CONCAT('%', COALESCE(UPPER($1), ''), '%') AND UPPER(c.localization) LIKE 
         CONCAT('%', COALESCE(UPPER($2), ''), '%') AND UPPER(c.class) LIKE CONCAT('%', COALESCE(UPPER($3), ''), '%') AND UPPER(c.gender) 
-        LIKE CONCAT('%', COALESCE(UPPER($4), ''), '%') ORDER BY c.name ASC OFFSET $5 * $6 LIMIT $6
+        LIKE CONCAT('%', COALESCE(UPPER($4), ''), '%') GROUP BY c.id, h.id ORDER BY c.name ASC OFFSET $5 LIMIT $6
     `, [name, localization, className, gender, offset, limit])
 }
 
-export { getChampions }
+async function insertChampion(name: string, age: number, localization: string, className: string, gender: string){
+    return await db.query(`
+        INSERT INTO champions (name, age, localization, class, gender)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id
+    `, [name, age, localization, className, gender])
+}
+
+export default { getChampions, insertChampion }
