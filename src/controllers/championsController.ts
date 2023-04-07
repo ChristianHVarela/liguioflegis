@@ -23,4 +23,14 @@ async function insertChampion(req: Request, res: Response){
     }
 }
 
-export default { getChampions, insertChampion }
+async function getChampion(req: Request, res: Response){
+    const { id } = req.params;
+    try {
+        const champion = await championsService.getChampion(Number(id));
+        return res.status(httpStatus.OK).send(champion);
+    } catch (error: any) {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+    }
+}
+
+export default { getChampions, insertChampion, getChampion }

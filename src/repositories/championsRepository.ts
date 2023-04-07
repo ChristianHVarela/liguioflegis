@@ -1,6 +1,6 @@
 import { db } from "../config/database";
 
-async function getChampions(name: string, localization: string, className: string, gender: string, offset: number, limit: number){
+async function findAll(name: string, localization: string, className: string, gender: string, offset: number, limit: number){
     return await db.query(`
         SELECT c.name AS name, c.age AS age, c.localization AS localization, c.class AS class, c.gender AS gender, 
         json_agg(json_build_object('name', h.name, 'description', h.description)) AS habilities FROM champions c JOIN habilities h 
@@ -18,4 +18,12 @@ async function insertChampion(name: string, age: number, localization: string, c
     `, [name, age, localization, className, gender])
 }
 
-export default { getChampions, insertChampion }
+async function findById(id: number){
+    return await db.query(`
+        SELECT c.name AS name, c.age AS age, c.localization AS localization, c.class AS class, c.gender AS gender, 
+        json_agg(json_build_object('name', h.name, 'description', h.description)) AS habilities FROM champions c JOIN habilities h 
+        ON h.champion_id = c.id WHERE c.id = $1 GROUP BY c.id
+    `, [id])
+}
+
+export default { findAll, insertChampion, findById }
