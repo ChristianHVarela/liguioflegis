@@ -8,4 +8,10 @@ async function insertHabilities(name: string, description: string, champion_id: 
     `, [name, description, champion_id])
 }
 
-export default { insertHabilities }
+async function deleteByChampionId(id: number){
+    await db.query(`
+        DELETE FROM habilities WHERE champion_id = $1
+    `, [id])
+}
+
+export default { insertHabilities, deleteByChampionId }

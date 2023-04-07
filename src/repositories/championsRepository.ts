@@ -26,4 +26,10 @@ async function findById(id: number){
     `, [id])
 }
 
-export default { findAll, insertChampion, findById }
+async function deleteById(id: number){
+    await db.query(`
+        DELETE FROM champions WHERE id = $1
+    `, [id])
+}
+
+export default { findAll, insertChampion, findById, deleteById }
